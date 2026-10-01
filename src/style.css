@@ -1,0 +1,271 @@
+/* ==========================================================================
+   Evetry Icon - Minimalist Text-First Light Theme
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #ffffff;
+  color: #111111;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.tagline {
+  color: #555555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: #666666;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background-color: #f3f4f6;
+  color: #111111;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* Search Bar */
+.search-section {
+  margin-bottom: 1.5rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+}
+
+.search-bar input:focus {
+  border-color: #000000;
+}
+
+.search-bar button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  background-color: #f3f4f6;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.search-bar button:hover {
+  background-color: #e5e7eb;
+}
+
+/* Filter Buttons */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid #dddddd;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.82rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #444444;
+}
+
+.filter-btn:hover {
+  border-color: #888888;
+  color: #111111;
+}
+
+.filter-btn.active {
+  background-color: #111111;
+  border-color: #111111;
+  color: #ffffff;
+}
+
+.search-status {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+#status-hint {
+  color: #888888;
+}
+
+/* Icons Grid */
+.icons-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.icon-item {
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 0.75rem 0.35rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: border-color 0.1s ease;
+}
+
+.icon-item:hover {
+  border-color: #111111;
+}
+
+.icon-item-svg {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.4rem;
+}
+
+.icon-item-svg img {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-item-name {
+  font-size: 0.72rem;
+  color: #333333;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-item-set {
+  font-size: 0.65rem;
+  color: #888888;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.pagination button {
+  padding: 0.45rem 1.25rem;
+  background-color: #f3f4f6;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.pagination button:hover {
+  background-color: #e5e7eb;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eeeeee;
+  margin: 2.5rem 0;
+}
+
+/* Documentation */
+.docs-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
+}
+
+.endpoint-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.endpoint-list li {
+  font-size: 0.9rem;
+}
+
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 0.85rem;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #111111;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111111;
+  color: #ffffff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+}

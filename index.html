@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evetry Icon — Static Vector REST API</title>
+    <meta
+      name="description"
+      content="High-performance static icon REST API and @evetry/icon-tools client library powered by Iconify."
+    />
+    <link rel="icon" type="image/svg+xml" href="/api/lucide/terminal.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Evetry Icon</h1>
+        <p class="tagline">Static vector icon REST API powered by Iconify. Zero server runtime, CDN edge delivery.</p>
+        <p class="meta">
+          <span>API: <code>https://icon.evetry.com</code></span> ·
+          <span>NPM: <code>@evetry/icon</code></span>
+        </p>
+      </header>
+
+      <section class="search-section">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="icon-search-input"
+            placeholder="Search icons (e.g. heart, user, search, bell)..."
+            autocomplete="off"
+            spellcheck="false"
+            autofocus
+          />
+          <button id="search-clear-btn" type="button">Clear</button>
+        </div>
+
+        <div class="filters" id="collection-filters">
+          <button class="filter-btn active" data-set="all">All (<span id="total-count">...</span>)</button>
+          <button class="filter-btn" data-set="lucide">Lucide (<span id="badge-lucide">2,148</span>)</button>
+          <button class="filter-btn" data-set="heroicons">Heroicons (<span id="badge-heroicons">1,297</span>)</button>
+        </div>
+
+        <div class="search-status">
+          <span id="search-status-text">Loading icons...</span>
+          <span id="status-hint">Click icon to copy SVG</span>
+        </div>
+      </section>
+
+      <section class="icons-list" id="icons-grid">
+        <!-- Dynamically populated -->
+      </section>
+
+      <div class="pagination" id="pagination-wrap" style="display: none;">
+        <button id="load-more-btn">Load more icons</button>
+      </div>
+
+      <hr class="divider" />
+
+      <section class="docs-section">
+        <h2>Static REST API Endpoints</h2>
+        <ul class="endpoint-list">
+          <li><code>GET /api/collections.json</code> — Catalog of available icon sets, licenses, and icon counts</li>
+          <li><code>GET /api/{set}.json</code> — Collection manifest (e.g. <code>/api/lucide.json</code>)</li>
+          <li><code>GET /api/{set}/{name}.svg</code> — Standalone 24x24 SVG file (e.g. <code>/api/lucide/heart.svg</code>)</li>
+          <li><code>GET /api/{set}/{name}.json</code> — Detailed icon metadata (viewBox, raw path body)</li>
+          <li><code>GET /api/search-index.json</code> — Compact search dictionary grouped by collection</li>
+        </ul>
+
+        <h2>Direct HTML Usage</h2>
+        <pre><code>&lt;!-- Embed raw SVG directly from CDN --&gt;
+&lt;img src="https://icon.evetry.com/api/lucide/heart.svg" width="24" height="24" alt="Heart" /&gt;</code></pre>
+
+        <h2>NPM Package (@evetry/icon)</h2>
+        <p>A zero-runtime client SDK and SVG processing toolkit for frontend applications.</p>
+
+        <pre><code># Install with Bun
+bun add @evetry/icon
+
+# Install with NPM
+npm install @evetry/icon</code></pre>
+
+        <h2>Quick Start (icon)</h2>
+        <pre><code>import { icon, processSvg } from '@evetry/icon';
+
+// 1. Fetch standalone raw SVG directly
+const rawSvg = await icon.getSvg('lucide', 'heart');
+
+// 2. Fetch and transform SVG on the fly in the browser
+const customSvg = await icon.getSvg('lucide', 'sparkles', {
+  size: 32,             // 32x32 px
+  stroke: '#2563eb',    // Custom stroke color
+  fill: 'none',         // Custom fill color
+  strokeWidth: 2,       // Stroke thickness
+  rotate: 90,           // Rotate degrees
+  flip: 'horizontal'    // Flip horizontal
+});
+
+// 3. List all collections
+const collections = await icon.listCollections();
+
+// 4. List all icons in a collection
+const lucide = await icon.listIcons('lucide');
+console.log(lucide.icons); // [{ name: "heart", svg: "https://icon.evetry.com/api/lucide/heart.svg" }]
+
+// 5. Instant search across all collections or specific set
+const results = await icon.search('camera', { set: 'lucide', limit: 20 });</code></pre>
+
+        <h2>Custom Subdomain / Self-Hosted Instance</h2>
+        <pre><code>import { Icon } from '@evetry/icon';
+
+// Override default endpoint if you use a custom domain
+const customIcon = new Icon({
+  baseUrl: 'https://my-custom-icons.domain.com'
+});</code></pre>
+
+        <h2>Client-Side SVG Processing Utilities</h2>
+        <p>Transform any SVG string directly in the browser with zero server round-trips:</p>
+        <pre><code>import { processSvg, svgToDataUri, svgToPngBlob, downloadSvg } from '@evetry/icon';
+
+// Transform SVG attributes
+const svg = processSvg(rawSvg, {
+  size: 48,
+  stroke: '#10b981',
+  strokeWidth: 1.5,
+});
+
+// Convert to Data URI for &lt;img src="..." /&gt; or CSS background
+const dataUri = svgToDataUri(svg);
+
+// Convert to 512x512 PNG Blob in the browser
+const pngBlob = await svgToPngBlob(svg, 512);
+
+// Download SVG in browser
+downloadSvg(svg, 'my-custom-icon.svg');</code></pre>
+
+        <h2>Standalone uFuzzy Search Engine</h2>
+        <pre><code>import { IconSearchEngine } from '@evetry/icon';
+
+const search = new IconSearchEngine();
+await search.loadIndex('https://icon.evetry.com/api/search-index.json');
+
+const matches = search.search('heart', 'lucide', 25);</code></pre>
+
+        <h2>Build Static API CLI Parameters</h2>
+        <pre><code># Default curated set (Lucide, Heroicons, Tabler, Remix Icon)
+bun run build:icons
+
+# Custom collections (see COLLECTIONS.md for all 238 available IDs)
+bun scripts/build-icons.ts --sets=lucide,heroicons,ph,simple-icons
+
+# Build all 238 collections (~200,000+ icons)
+bun scripts/build-icons.ts --all</code></pre>
+      </section>
+    </main>
+
+    <!-- Inline copy notification -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

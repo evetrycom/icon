@@ -1,0 +1,40 @@
+{
+  "name": "@evetry/icon",
+  "version": "1.0.0",
+  "description": "Client tools and SDK for Evetry Icon: in-browser SVG processor, ultra-fast uFuzzy search, and static REST API client.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun run ../../scripts/build-lib.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "icons",
+    "svg",
+    "iconify",
+    "evetry",
+    "rest-api",
+    "svg-tools",
+    "ufuzzy",
+    "svg-processor"
+  ],
+  "author": "Evetry",
+  "license": "MIT",
+  "dependencies": {
+    "@leeoniya/ufuzzy": "^1.0.19"
+  }
+}

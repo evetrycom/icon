@@ -1,0 +1,26 @@
+{
+  "name": "icons",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "bun scripts/build-icons.ts && vite build",
+    "build:icons": "bun scripts/build-icons.ts",
+    "build:collections-doc": "bun scripts/generate-collections-md.ts",
+    "build:lib": "bun scripts/build-lib.ts",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.537",
+    "@types/bun": "latest",
+    "vite": "^8.3.2"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "@iconify/utils": "^3.1.7",
+    "@leeoniya/ufuzzy": "^1.0.19"
+  }
+}
