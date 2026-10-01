@@ -87,7 +87,7 @@ function renderIcons() {
         <img src="${item.u}" alt="${item.n}" loading="lazy" width="24" height="24" />
       </div>
       <div class="icon-item-name">${item.n}</div>
-      <div class="icon-item-set">${item.s}</div>
+      <div class="icon-item-set">${item.sn || item.s}</div>
     `;
 
     // Click icon -> Copy SVG code

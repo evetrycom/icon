@@ -1,9 +1,10 @@
 import uFuzzy from '@leeoniya/ufuzzy';
 
 export interface SearchIconItem {
-  s: string; // collection set, e.g. "lucide"
-  n: string; // icon name, e.g. "heart"
-  u: string; // direct SVG url, e.g. "/api/lucide/heart.svg"
+  s: string; // collection set key/id, e.g. "ri"
+  sn: string; // collection display name, e.g. "Remix Icon"
+  n: string; // icon name, e.g. "shopping-bag"
+  u: string; // direct SVG url, e.g. "/api/ri/shopping-bag.svg"
 }
 
 export interface CollectionIndexEntry {
@@ -75,6 +76,10 @@ export class IconSearchEngine {
     }));
   }
 
+  getCollectionName(set: string): string {
+    return this.collections[set]?.name || set;
+  }
+
   getCollectionIcons(set: string): string[] {
     return this.collections[set]?.icons || [];
   }
@@ -87,8 +92,10 @@ export class IconSearchEngine {
 
     if (!needle) {
       if (filterSet && this.collections[filterSet]) {
+        const sn = this.collections[filterSet].name || filterSet;
         return this.collections[filterSet].icons.slice(0, limit).map((iconName) => ({
           s: filterSet,
+          sn,
           n: iconName,
           u: `/api/${filterSet}/${iconName}.svg`,
         }));
@@ -96,13 +103,16 @@ export class IconSearchEngine {
 
       return this.globalItems.slice(0, limit).map((item) => ({
         s: item.s,
+        sn: this.collections[item.s]?.name || item.s,
         n: item.n,
         u: `/api/${item.s}/${item.n}.svg`,
       }));
     }
 
     if (filterSet && this.collections[filterSet]) {
-      const colIcons = this.collections[filterSet].icons;
+      const col = this.collections[filterSet];
+      const colIcons = col.icons;
+      const sn = col.name || filterSet;
       const [idxs, info, order] = this.uf.search(colIcons, needle);
       if (!idxs || idxs.length === 0) return [];
 
@@ -114,6 +124,7 @@ export class IconSearchEngine {
         if (iconName) {
           results.push({
             s: filterSet,
+            sn,
             n: iconName,
             u: `/api/${filterSet}/${iconName}.svg`,
           });
@@ -134,6 +145,7 @@ export class IconSearchEngine {
       if (item) {
         results.push({
           s: item.s,
+          sn: this.collections[item.s]?.name || item.s,
           n: item.n,
           u: `/api/${item.s}/${item.n}.svg`,
         });
