@@ -13,13 +13,19 @@
       "require": "./dist/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "bun run ../../scripts/build-packages.ts",
+    "build": "bun run build:esm && bun run build:cjs && bun run build:types",
+    "build:esm": "bun build src/index.ts --outfile=dist/index.mjs --target=browser --format=esm --minify",
+    "build:cjs": "bun build src/index.ts --outfile=dist/index.cjs --target=node --format=cjs --minify",
+    "build:types": "bun x tsc -p tsconfig.json",
     "prepublishOnly": "bun run build"
   },
   "keywords": [
