@@ -19,7 +19,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "bun run ../../scripts/build-lib.ts",
+    "build": "bun run ../../scripts/build-packages.ts",
     "prepublishOnly": "bun run build"
   },
   "keywords": [

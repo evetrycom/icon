@@ -8,7 +8,7 @@
     "build": "bun scripts/build-icons.ts && vite build",
     "build:icons": "bun scripts/build-icons.ts",
     "build:collections-doc": "bun scripts/generate-collections-md.ts",
-    "build:lib": "bun scripts/build-lib.ts",
+    "build:packages": "bun scripts/build-packages.ts",
     "preview": "vite preview"
   },
   "devDependencies": {

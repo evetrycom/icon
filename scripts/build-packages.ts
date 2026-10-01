@@ -2,14 +2,14 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-const PKG_DIR = join(process.cwd(), "packages", "icon-tools");
+const PKG_DIR = join(process.cwd(), "packages", "icon");
 const DIST_DIR = join(PKG_DIR, "dist");
 
 if (!existsSync(DIST_DIR)) {
   mkdirSync(DIST_DIR, { recursive: true });
 }
 
-console.log("📦 Building @evetry/icon-tools...");
+console.log("📦 Building @evetry/icon...");
 
 // 1. Build ESM bundle
 console.log("🔨 Bundling ESM (dist/index.mjs)...");
@@ -64,5 +64,5 @@ if (tsBuild.status !== 0) {
 }
 
 console.log(
-  "✅ @evetry/icon-tools built successfully into packages/icon-tools/dist/",
+  "✅ @evetry/icon built successfully into packages/icon/dist/",
 );

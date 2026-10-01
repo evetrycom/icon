@@ -2,7 +2,7 @@
 
 > Ultra-Fast Static Icon REST API & Client-Side Vector Engine powered by Iconify.
 
-**Evetry Icon** compiles and serves icon collections as pure static JSON and SVG REST endpoints. Designed to be hosted on edge CDNs (Cloudflare Pages, Vercel, Netlify, or GitHub Pages) with **zero server costs** and **sub-millisecond latency**. It includes an interactive dark-mode Web Explorer, instant client-side fuzzy search powered by **uFuzzy**, and an in-browser SVG transformation engine.
+**Evetry Icon** compiles and serves icon collections as pure static JSON and SVG REST endpoints. Designed to be hosted on edge CDNs (Cloudflare Pages, Vercel, Netlify, or GitHub Pages) with **zero server costs** and **sub-millisecond latency**. It includes a minimalist Web Explorer, instant client-side fuzzy search powered by **uFuzzy**, and an in-browser SVG transformation engine.
 
 ---
 
@@ -12,10 +12,10 @@
 - **No Version Prefix**: Clean, predictable URL routing (`/api/collections.json`, `/api/{set}.json`, `/api/{set}/{name}.svg`, `/api/{set}/{name}.json`).
 - **Standardized 24px Dimensions**: All generated SVGs default to `width="24" height="24"` while preserving their native `viewBox` coordinates for crisp vector rendering.
 - **Lightweight Collection Manifests**: Collection endpoints (`/api/{set}.json`) only return icon names and direct SVG URLs (`/api/{set}/{name}.svg`) without bloated SVG payloads.
-- **Super-Lean Search Index**: Uses a compact flat string array `string[]` (`["set:name", ...]`), resulting in tiny transfer sizes (< 85 KB for 3,400+ icons, < 18 KB gzipped).
+- **Super-Lean Search Index**: Uses a compact dictionary format (`{"lucide": { "name": "...", "icons": [...] }}`), eliminating redundant set prefix keys and reducing index size by > 32%.
 - **Blazing Fast uFuzzy Search**: Sub-millisecond client-side fuzzy search with typo tolerance.
 - **Client-Side SVG Processor**: Performant in-browser helper to customize size, fill, stroke color, stroke width, rotation, and flip, with direct export to Data URI and PNG.
-- **Interactive SVG Studio UI**: Premium dark glassmorphic web dashboard with real-time controls, code export (SVG, JSX, Data URI), and instant downloads.
+- **Minimalist Web Explorer**: Ultra-clean, fast web interface with instant search and comprehensive documentation.
 
 ---
 
@@ -27,7 +27,7 @@
 | `GET`  | `/api/{set}.json`        | JSON   | Collection manifest containing lightweight list of icon names and direct SVG links. |
 | `GET`  | `/api/{set}/{name}.svg`  | SVG    | Pure standalone SVG file (ready for HTML `<img>` tags or CSS backgrounds).          |
 | `GET`  | `/api/{set}/{name}.json` | JSON   | Complete icon metadata (viewBox, raw path body, width/height).                      |
-| `GET`  | `/api/search-index.json` | JSON   | Ultra-compact flat string array `["set:name", ...]` optimized for uFuzzy.           |
+| `GET`  | `/api/search-index.json` | JSON   | Grouped dictionary search index format optimized for client-side search.            |
 
 ### Quick Integration Examples
 
