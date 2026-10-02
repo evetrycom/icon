@@ -35,7 +35,9 @@ jobs:
         run: bun install
 
       - name: Build static icons and frontend
-        run: bun run build
+        run: |
+          bun scripts/build-icons.ts --sets=lucide,heroicons,tabler,ri,hugeicons
+          bun run vite build
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
