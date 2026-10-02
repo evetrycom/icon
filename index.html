@@ -104,7 +104,18 @@ const lucide = await icon.listIcons('lucide');
 console.log(lucide.icons); // [{ name: "heart", svg: "https://icon.evetry.com/api/lucide/heart.svg" }]
 
 // 5. Instant search across all collections or specific set
-const results = await icon.search('camera', { set: 'lucide', limit: 20 });</code></pre>
+const results = await icon.search('shopping-bag', { set: 'ri', limit: 20 });
+console.log(results);
+/*
+[
+  {
+    "set": "ri",
+    "setName": "Remix Icon",
+    "name": "shopping-bag-2-fill",
+    "url": "https://icon.evetry.com/api/ri/shopping-bag-2-fill.svg"
+  }
+]
+*/</code></pre>
 
         <h2>Custom Subdomain / Self-Hosted Instance</h2>
         <pre><code>import { Icon } from '@evetry/icon';
@@ -133,14 +144,6 @@ const pngBlob = await svgToPngBlob(svg, 512);
 
 // Download SVG in browser
 downloadSvg(svg, 'my-custom-icon.svg');</code></pre>
-
-        <h2>Standalone uFuzzy Search Engine</h2>
-        <pre><code>import { IconSearchEngine } from '@evetry/icon';
-
-const search = new IconSearchEngine();
-await search.loadIndex('https://icon.evetry.com/api/search-index.json');
-
-const matches = search.search('heart', 'lucide', 25);</code></pre>
 
         <h2>Build Static API CLI Parameters</h2>
         <pre><code># Default curated set (Lucide, Heroicons, Tabler, Remix Icon)

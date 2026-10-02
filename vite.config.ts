@@ -40,6 +40,11 @@ export default defineConfig({
     port: 5173,
     open: false,
   },
+  resolve: {
+    alias: {
+      '@evetry/icon': join(process.cwd(), 'packages', 'icon', 'src'),
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: false, // Keep dist/api generated files intact during frontend bundling

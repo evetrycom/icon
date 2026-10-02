@@ -2,7 +2,7 @@
 
 > Ultra-Fast Static Icon REST API & Client-Side Vector Engine powered by Iconify.
 
-**Evetry Icon** compiles and serves icon collections as pure static JSON and SVG REST endpoints. Designed to be hosted on edge CDNs (Cloudflare Pages, Vercel, Netlify, or GitHub Pages) with **zero server costs** and **sub-millisecond latency**. It includes a minimalist Web Explorer, instant client-side fuzzy search powered by **uFuzzy**, and an in-browser SVG transformation engine.
+**Evetry Icon** compiles and serves icon collections as pure static JSON and SVG REST endpoints. Designed to be hosted on edge CDNs (Cloudflare Pages, Vercel, Netlify, or GitHub Pages) with **zero server costs** and **sub-millisecond latency**. It includes a minimalist Web Explorer, instant client-side fuzzy search powered by **uFuzzy**, and an official client package **`@evetry/icon`**.
 
 ---
 
@@ -14,7 +14,7 @@
 - **Lightweight Collection Manifests**: Collection endpoints (`/api/{set}.json`) only return icon names and direct SVG URLs (`/api/{set}/{name}.svg`) without bloated SVG payloads.
 - **Super-Lean Search Index**: Uses a compact dictionary format (`{"lucide": { "name": "...", "icons": [...] }}`), eliminating redundant set prefix keys and reducing index size by > 32%.
 - **Blazing Fast uFuzzy Search**: Sub-millisecond client-side fuzzy search with typo tolerance.
-- **Client-Side SVG Processor**: Performant in-browser helper to customize size, fill, stroke color, stroke width, rotation, and flip, with direct export to Data URI and PNG.
+- **Unified `@evetry/icon` Package**: Complete SDK with single `Icon` class for fetching, searching, and in-browser SVG transformations (color, size, stroke width, rotation, flip, PNG export).
 - **Minimalist Web Explorer**: Ultra-clean, fast web interface with instant search and comprehensive documentation.
 
 ---
@@ -34,7 +34,7 @@
 ```html
 <!-- Direct HTML Embedding -->
 <img
-  src="https://icons.evetry.com/api/lucide/heart.svg"
+  src="https://icon.evetry.com/api/lucide/heart.svg"
   width="24"
   height="24"
   alt="Heart"
@@ -43,32 +43,103 @@
 
 ```javascript
 // Fetch icon metadata via REST API
-const response = await fetch("/api/lucide/heart.json");
+const response = await fetch("https://icon.evetry.com/api/lucide/heart.json");
 const data = await response.json();
 console.log(data.viewBox, data.svg);
 ```
 
 ---
 
-## 🛠️ Client-Side SVG Processing Engine
+## 📦 Client SDK (`@evetry/icon`)
 
-The [`src/lib/svg-processor.ts`](./src/lib/svg-processor.ts) module provides rich in-browser SVG transformations without any server round-trips:
+The official client toolkit is located in [`packages/icon`](./packages/icon) and published to NPM:
+
+```bash
+# Using bun
+bun add @evetry/icon
+
+# Using npm
+npm install @evetry/icon
+```
+
+### Quick Usage & Hierarchical API
+
+```typescript
+import { icon } from '@evetry/icon';
+
+// 1. Search returns IconItem instances equipped with SvgResult methods
+const results = await icon.search('heart', { limit: 10 });
+const heartItem = results[0]; // IconItem
+
+// Fetch enhanced SvgResult:
+const svg = await heartItem.getSvg({ size: 32, fill: 'red' });
+document.body.innerHTML = svg;
+
+// Chaining export methods:
+const uri = svg.toUri();               // Data URI
+const blob = await svg.toBlob(512);    // PNG Blob
+svg.download('heart.svg');             // Download SVG
+await svg.downloadPng('heart.png');    // Download PNG
+
+// Or directly from IconItem:
+await heartItem.download('heart.svg');
+
+// 2. Hierarchical navigation: Collection -> IconSet -> IconItem -> SvgResult
+const riCollection = await icon.getCollection('ri');
+const iconSet = await riCollection.getIconSet();
+const bagIcon = iconSet.getIcon('shopping-bag');
+if (bagIcon) {
+  const bagSvg = await bagIcon.getSvg();
+}
+```
+
+### Clean Search Result Properties
+
+Every `IconItem` returned by `icon.search()` provides human-friendly properties:
+
+```json
+[
+  {
+    "set": "ri",
+    "setName": "Remix Icon",
+    "name": "shopping-bag-2-fill",
+    "url": "https://icon.evetry.com/api/ri/shopping-bag-2-fill.svg"
+  }
+]
+```
+
+### Custom Instance (Self-Hosted / Custom Domain)
+
+```typescript
+import { Icon } from '@evetry/icon';
+
+const myIcons = new Icon({
+  baseUrl: 'https://my-custom-icons.domain.com'
+});
+```
+
+---
+
+## 🛠️ In-Browser SVG Processing Engine
+
+The [`@evetry/icon`](./packages/icon) package provides rich client-side SVG processing without any server round-trips:
 
 ```typescript
 import {
   processSvg,
   svgToDataUri,
   svgToPngBlob,
-} from "./src/lib/svg-processor";
+  downloadSvg
+} from "@evetry/icon";
 
 // 1. Transform raw or fetched SVG in the client
 const customizedSvg = processSvg(rawSvg, {
-  size: 32, // Set both width and height to 32px
-  fill: "#ec4899", // Update fill color
-  stroke: "#ffffff", // Update stroke color
-  strokeWidth: 2.5, // Adjust stroke thickness
-  rotate: 90, // Rotate 90 degrees
-  flip: "horizontal", // Flip horizontally
+  size: 48,
+  fill: "none",
+  stroke: "#10b981",
+  strokeWidth: 2,
+  rotate: 90,
+  flip: "horizontal",
 });
 
 // 2. Convert to Data URI for <img> tags or CSS backgrounds
@@ -76,43 +147,9 @@ const dataUri = svgToDataUri(customizedSvg);
 
 // 3. Export to PNG Blob directly in the browser
 const pngBlob = await svgToPngBlob(customizedSvg, 512);
-```
 
----
-
-## 🔍 Instant Search with uFuzzy
-
-The [`src/lib/search.ts`](./src/lib/search.ts) module loads `/api/search-index.json` (grouped dictionary `{ [set]: { name, icons: [...] } }`):
-
-```typescript
-import { IconSearchEngine } from "./src/lib/search";
-
-const engine = new IconSearchEngine();
-await engine.loadIndex("/api/search-index.json");
-
-// Search with keyword and optional collection filter:
-const results = engine.search("heart", "lucide", 50);
-console.log(results);
-// Output: [{ s: 'lucide', n: 'heart', u: '/api/lucide/heart.svg' }, ...]
-```
-
----
-
-## 📦 High-Level Client SDK
-
-The [`src/lib/index.ts`](./src/lib/index.ts) module exports a lightweight client SDK:
-
-```typescript
-import { icon, Icon } from "@evetry/icon";
-
-// Get list of collections
-const collections = await icon.listCollections();
-
-// Fetch raw SVG string
-const rawSvg = await icon.getSvg("lucide", "sparkles");
-
-// Get direct SVG URL
-const url = icon.getSvgUrl("heroicons", "bolt");
+// 4. Download SVG in browser
+downloadSvg(customizedSvg, "my-icon.svg");
 ```
 
 ---
@@ -129,7 +166,7 @@ Make sure [Bun](https://bun.sh) is installed on your machine (`bun -v`).
 bun run dev
 ```
 
-Open `http://localhost:5173` in your browser to launch the Web Explorer and SVG Studio.
+Open `http://localhost:5173` in your browser to launch the Web Explorer.
 
 ### 2. Generate Static API Endpoints (CLI Parameters)
 
@@ -157,7 +194,7 @@ bun scripts/build-icons.ts --help
 bun run build
 ```
 
-This compiles both the static API endpoints into `dist/api/` and the web interface into `dist/`, ready for zero-config static deployment to Cloudflare Pages, Vercel, Netlify, or any static CDN.
+This compiles both the static API endpoints into `dist/api/` and the web interface into `dist/`, ready for zero-config static deployment to GitHub Pages, Cloudflare, Vercel, Netlify, or any static CDN.
 
 ---
 

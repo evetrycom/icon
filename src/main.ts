@@ -1,9 +1,12 @@
-import { searchEngine, type SearchIconItem } from './lib/search';
+import { Icon, type IconItem } from '@evetry/icon';
+
+// Create Icon client instance using current window origin
+const icon = new Icon(typeof window !== 'undefined' ? window.location.origin : '');
 
 // State
 let currentCollection = 'all';
 let currentQuery = '';
-let currentResults: SearchIconItem[] = [];
+let currentResults: IconItem[] = [];
 let displayedCount = 0;
 const PAGE_SIZE = 96;
 
@@ -32,17 +35,17 @@ function showToast(message: string) {
 // 1. Initialize
 async function init() {
   try {
-    await searchEngine.loadIndex('/api/search-index.json');
-    const total = searchEngine.totalIcons;
+    await icon.loadSearchIndex();
+    const total = icon.totalIcons;
     if (totalCountEl) totalCountEl.textContent = total.toLocaleString();
 
     // Populate badges
-    for (const c of searchEngine.availableCollections) {
+    for (const c of icon.availableCollections) {
       const badge = document.getElementById(`badge-${c.id}`);
       if (badge) badge.textContent = c.total.toLocaleString();
     }
 
-    executeSearch();
+    await executeSearch();
   } catch (err) {
     if (searchStatusText) searchStatusText.textContent = 'Failed to load icons.';
     console.error(err);
@@ -50,8 +53,11 @@ async function init() {
 }
 
 // 2. Search
-function executeSearch() {
-  currentResults = searchEngine.search(currentQuery, currentCollection, 3000);
+async function executeSearch() {
+  currentResults = await icon.search(currentQuery, {
+    set: currentCollection,
+    limit: 3000,
+  });
 
   if (searchStatusText) {
     if (!currentQuery.trim()) {
@@ -80,23 +86,22 @@ function renderIcons() {
   for (const item of batch) {
     const card = document.createElement('div');
     card.className = 'icon-item';
-    card.title = `Click to copy ${item.n} SVG`;
+    card.title = `Click to copy ${item.name} SVG`;
 
     card.innerHTML = `
       <div class="icon-item-svg">
-        <img src="${item.u}" alt="${item.n}" loading="lazy" width="24" height="24" />
+        <img src="${item.url}" alt="${item.name}" loading="lazy" width="24" height="24" />
       </div>
-      <div class="icon-item-name">${item.n}</div>
-      <div class="icon-item-set">${item.sn || item.s}</div>
+      <div class="icon-item-name">${item.name}</div>
+      <div class="icon-item-set">${item.setName}</div>
     `;
 
-    // Click icon -> Copy SVG code
+    // Click icon -> Copy SVG code using item.getSvg()
     card.addEventListener('click', async () => {
       try {
-        const res = await fetch(item.u);
-        const svg = await res.text();
-        await navigator.clipboard.writeText(svg);
-        showToast(`Copied ${item.n} SVG to clipboard`);
+        const svg = await item.getSvg();
+        await navigator.clipboard.writeText(svg.toString());
+        showToast(`Copied ${item.name} SVG to clipboard`);
       } catch {
         showToast('Failed to copy');
       }

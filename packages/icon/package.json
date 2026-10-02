@@ -1,6 +1,6 @@
 {
   "name": "@evetry/icon",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Client tools and SDK for Evetry Icon: in-browser SVG processor, ultra-fast uFuzzy search, and static REST API client.",
   "type": "module",
   "main": "./dist/index.cjs",
